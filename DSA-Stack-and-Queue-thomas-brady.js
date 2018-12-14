@@ -7,6 +7,101 @@ class _Node {
   }
 }
 
+class Node {
+  constructor(value) {
+    (this.value = value), (this.next = null), (this.prev = null);
+  }
+}
+
+class Queue {
+  constructor() {
+    this.first = null;
+    this.last = null;
+  }
+  enqueue(data) {
+    const node = new Node(data);
+
+    if (this.first === null) {
+      this.first = node;
+    }
+
+    if (this.last) {
+      node.next = this.last;
+      this.last.prev = node;
+    }
+
+    this.last = node;
+  }
+
+  peek() {
+    return this.first.value;
+  }
+
+  dequeue() {
+    if (this.first === null) {
+      return;
+    }
+
+    const node = this.first;
+    this.first = node.prev;
+
+    if (node === this.last) {
+      this.last = null;
+    }
+
+    return node.value;
+  }
+}
+
+function displayQ(q) {
+  let currentNode = q.first;
+  while (currentNode !== null) {
+    console.log(currentNode.value);
+    currentNode = currentNode.prev;
+  }
+}
+
+function squareDance(q) {
+  let spares = new Queue();
+  let spareCount = 0;
+  while (q.first) {
+    if (!spares.first) {
+      spares.enqueue(q.dequeue());
+      spareCount++;
+    }
+    if (q.first.value.gender !== spares.first.value.gender) {
+      console.log(
+        `${q.first.value.gender} dancer is : ${q.first.value.name} and the ${
+        spares.first.value.gender
+        } dancer is: ${spares.first.value.name}`
+      );
+      q.dequeue();
+      spares.dequeue();
+      spareCount--;
+    } else if (q.first.value.gender === spares.first.value.gender) {
+      spares.enqueue(q.dequeue());
+      spareCount++;
+    }
+  }
+  console.log(
+    'There are ' +
+      spareCount +
+      ' ' +
+      spares.first.value.gender +
+      ' dancers waiting to dance.'
+  );
+}
+
+function stacksToQ(stackOne, stackTwo) {
+  //input: 1,2,3,4
+  while (stackOne.top) {
+    stackTwo.push(stackOne.pop());
+  }
+  while (stackTwo.top) {
+    console.log(stackTwo.pop());
+  }
+}
+
 class Stack {
   constructor() {
     this.top = null;
@@ -61,15 +156,6 @@ function is_palindrome(s) {
     return false;
   }
 }
-//input = ([1-5)+(3-5))
-//create variables = parentheses, stack,
-// loop through the str looking at each character
-// look for the index of the character in the string
-// look %2 to determine if it's opened or closed
-// check to see if it's closed -
-
-//True
-//False - missing
 
 function balancedParentheses(str) {
   let charStack = new Stack();
@@ -127,7 +213,7 @@ function leftToRight(leftStack, rightStack) {
   let count = 1;
   while (leftStack.top) {
     let temp = leftStack.pop();
-    while(rightStack.top && rightStack.top.data < temp) {
+    while (rightStack.top && rightStack.top.data < temp) {
       leftStack.push(rightStack.pop());
     }
     rightStack.push(temp);
@@ -136,6 +222,36 @@ function leftToRight(leftStack, rightStack) {
 }
 
 function main() {
+  let starTrekQ = new Queue();
+  starTrekQ.enqueue('Kirk');
+  starTrekQ.enqueue('Spock');
+  starTrekQ.enqueue('Uhura');
+  starTrekQ.enqueue('Sulu');
+  starTrekQ.enqueue('Checkov');
+  console.log(starTrekQ.peek());
+  displayQ(starTrekQ);
+  let stackOne = new Stack();
+  let stackTwo = new Stack();
+  stackOne.push(1);
+  stackOne.push(2);
+  stackOne.push(3);
+  stackOne.push(4);
+  display(stackOne);
+  console.log('Below is exiting');
+  stacksToQ(stackOne, stackTwo);
+  let dancers = new Queue();
+  dancers.enqueue({ gender: 'F', name: 'Jane' });
+  dancers.enqueue({ gender: 'M', name: 'frank' });
+  dancers.enqueue({ gender: 'M', name: 'John' });
+  dancers.enqueue({ gender: 'M', name: 'joe' });
+  dancers.enqueue({ gender: 'F', name: 'Madonna' });
+  dancers.enqueue({ gender: 'M', name: 'dave' });
+  dancers.enqueue({ gender: 'M', name: 'Chris' });
+  dancers.enqueue({ gender: 'F', name: 'Beyonce' });
+  squareDance(dancers);
+}
+
+function mainStack() {
   let starTrek = new Stack();
   let leftStack = new Stack();
   let rightStack = new Stack();
