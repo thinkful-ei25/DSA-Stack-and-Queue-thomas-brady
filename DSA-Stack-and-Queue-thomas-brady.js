@@ -92,34 +92,57 @@ function balancedParentheses(str) {
       charStack.push(char);
       indexStack.push(count);
     } else if (close[char]) {
-        if (char !== open[charStack.top.data]) {
-          return (
-            char +
-            ' at index ' +
-            count +
-            ' does not match ' +
-            charStack.top.data +
-            ' at index ' +
-            indexStack.top.data +
-            '.'
-          );
-        } else if (char === open[charStack.pop()]) {
+      if (char !== open[charStack.top.data]) {
+        return (
+          char +
+          ' at index ' +
+          count +
+          ' does not match ' +
+          charStack.top.data +
+          ' at index ' +
+          indexStack.top.data +
+          '.'
+        );
+      } else if (char === open[charStack.pop()]) {
         indexStack.pop();
       }
     }
   }
-  if(indexStack.top) {
-      return 'No closing character for ' +
+  if (indexStack.top) {
+    return (
+      'No closing character for ' +
       charStack.top.data +
       ' at index ' +
       indexStack.top.data +
-      '.';
+      '.'
+    );
   }
   return 'All looks good';
 }
 
+function leftToRight(leftStack, rightStack) {
+  if (rightStack.top === null) {
+    rightStack.push(leftStack.pop());
+  }
+  let count = 1;
+  while (leftStack.top) {
+    let temp = leftStack.pop();
+    while(rightStack.top && rightStack.top.data < temp) {
+      leftStack.push(rightStack.pop());
+    }
+    rightStack.push(temp);
+  }
+  return rightStack;
+}
+
 function main() {
   let starTrek = new Stack();
+  let leftStack = new Stack();
+  let rightStack = new Stack();
+  leftStack.push(2);
+  leftStack.push(100);
+  leftStack.push(3);
+  leftStack.push(1);
   console.log('CREATE STACK CLASS ==> ');
   starTrek.push('Kirk');
   peek(starTrek);
@@ -143,6 +166,11 @@ function main() {
   console.log(balancedParentheses('(1[2)3)')); // false
   console.log(balancedParentheses('(1(23)')); //false
   console.log(balancedParentheses('[(1{2}3)]'));
+  console.log(' ');
+  leftToRight(leftStack, rightStack);
+  console.log('POST SORTED STACK ==> ');
+  display(leftStack);
+  display(rightStack);
 }
 
 main();
