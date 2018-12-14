@@ -61,6 +61,22 @@ function displayQ(q) {
   }
 }
 
+function ophidian(q){
+
+  while(q.first) {
+    let currentCustomer = q.first.value;
+    if(currentCustomer) {
+      console.log('We served a prepared customer');
+      q.dequeue();
+    } else {
+      console.log('You were not prepared. Back to the line!');
+      currentCustomer = true;
+      q.enqueue(currentCustomer);
+      q.dequeue();
+    }
+  }
+}
+
 function squareDance(q) {
   let spares = new Queue();
   let spareCount = 0;
@@ -249,6 +265,15 @@ function main() {
   dancers.enqueue({ gender: 'M', name: 'Chris' });
   dancers.enqueue({ gender: 'F', name: 'Beyonce' });
   squareDance(dancers);
+  let random;
+  let bankQ = new Queue();
+  let customers = 10;
+  while(customers > 0) {
+    random = Math.random() >= 0.25;
+    bankQ.enqueue(random);
+    customers--;
+  }
+  ophidian(bankQ);
 }
 
 function mainStack() {
